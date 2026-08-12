@@ -32,31 +32,13 @@
 
 ## 🏗️ Architecture & Dataflow
 
-```mermaid
-graph TD
-    A[User Interface] -->|Updates| B(State Manager)
-    B -->|JSON Payload| C{Template Engine}
-    C -->|Renders| D[Live Canvas DOM]
-    
-    E[Theme Controls] -->|CSS Variables| D
-    
-    D -.->|window.print| F((PDF Export))
-```
+<div align="center">
+  <img src="https://mermaid.ink/svg/Z3JhcGggVEQKICAgIEFbVXNlciBJbnRlcmZhY2VdIC0tPnxVcGRhdGVzfCBCKFN0YXRlIE1hbmFnZXIpCiAgICBCIC0tPnxKU09OIFBheWxvYWR8IEN7VGVtcGxhdGUgRW5naW5lfQogICAgQyAtLT58UmVuZGVyc3wgRFtMaXZlIENhbnZhcyBET01dCiAgICBFW1RoZW1lIENvbnRyb2xzXSAtLT58Q1NTIFZhcmlhYmxlc3wgRAogICAgRCAtLi0+fHdpbmRvdy5wcmludHwgRigoUERGIEV4cG9ydCkp" alt="Architecture Diagram">
+</div>
 
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant UI as Form Inputs
-    participant S as State (JS)
-    participant C as Canvas Renderer
-    
-    U->>UI: Enters Experience Data
-    UI->>S: Updates State Object
-    S->>C: Triggers renderPreview()
-    C->>C: Selects Template HTML string
-    C->>C: Maps State to HTML
-    C-->>U: Displays Updated Resume View
-```
+<div align="center">
+  <img src="https://mermaid.ink/svg/c2VxdWVuY2VEaWFncmFtCiAgICBwYXJ0aWNpcGFudCBVIGFzIFVzZXIKICAgIHBhcnRpY2lwYW50IFVJIGFzIEZvcm0gSW5wdXRzCiAgICBwYXJ0aWNpcGFudCBTIGFzIFN0YXRlIChKUykKICAgIHBhcnRpY2lwYW50IEMgYXMgQ2FudmFzIFJlbmRlcmVyCiAgICAKICAgIFUtPj5VSTogRW50ZXJzIEV4cGVyaWVuY2UgRGF0YQogICAgVUktPj5TOiBVcGRhdGVzIFN0YXRlIE9iamVjdAogICAgUy0+PkM6IFRyaWdnZXJzIHJlbmRlclByZXZpZXcoKQogICAgQy0+PkM6IFNlbGVjdHMgVGVtcGxhdGUgSFRNTCBzdHJpbmcKICAgIEMtPj5DOiBNYXBzIFN0YXRlIHRvIEhUTUwKICAgIEMtLT4+VTogRGlzcGxheXMgVXBkYXRlZCBSZXN1bWUgVmlldw==" alt="Dataflow Sequence Diagram">
+</div>
 
 ## 🛠️ Tech Stack
 
