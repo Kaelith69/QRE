@@ -564,7 +564,7 @@
                 </div>
                 <div class="input-group">
                     <label>Professional Summary</label>
-                    <textarea id="in-summary" oninput="app.updateField('summary', null, this.value)"></textarea>
+                    <textarea id="in-summary" style="resize: none; overflow: hidden;" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'; app.updateField('summary', null, this.value)"></textarea>
                 </div>
             </div>
 
@@ -676,10 +676,6 @@
                     </div>
                 </div>
 
-                <div style="margin-top: auto; padding-top: 10px;">
-                    <button class="btn btn-primary" style="width: 100%; padding: 12px;" onclick="UI.fitToPage(); window.print();">Export PDF</button>
-                    <p style="text-align:center; font-size:0.7rem; color:var(--text-muted); margin-top:6px;">Fits automatically to one A4 page. Enable 'Background Graphics' in print settings.</p>
-                </div>
             </div>
 
         </div>
@@ -687,6 +683,7 @@
         <div class="nav-footer">
             <button class="btn btn-secondary" id="btn-prev" onclick="app.navigate(-1)" style="visibility: hidden;">Back</button>
             <button class="btn btn-primary" id="btn-next" onclick="app.navigate(1)">Next</button>
+            <button class="btn btn-primary" id="btn-export" onclick="UI.fitToPage(); window.print();" style="display: none; background-color: var(--success-color); border-color: var(--success-color); margin-left: auto;">Export PDF</button>
         </div>
     </div>
 
@@ -866,6 +863,9 @@
                     const el = document.getElementById(`in-${f}`);
                     if(el) el.value = this.state[f] || '';
                 });
+                
+                const summaryEl = document.getElementById('in-summary');
+                if (summaryEl) summaryEl.dispatchEvent(new Event('input'));
 
                 document.querySelectorAll('.template-card').forEach(el => el.classList.remove('active'));
                 const tplEl = document.getElementById(`tpl-${this.state.design.template}`);
@@ -1677,6 +1677,9 @@
                 
                 document.getElementById('btn-prev').style.visibility = this.currentStep === 0 ? 'hidden' : 'visible';
                 document.getElementById('btn-next').style.display = this.currentStep === steps.length - 1 ? 'none' : 'flex';
+                
+                const btnExport = document.getElementById('btn-export');
+                if (btnExport) btnExport.style.display = this.currentStep === steps.length - 1 ? 'flex' : 'none';
                 
                 document.querySelectorAll('.step-indicator').forEach((el, i) => {
                     el.className = `step-indicator ${i === this.currentStep ? 'active' : i < this.currentStep ? 'completed' : ''}`;
