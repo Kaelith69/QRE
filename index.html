@@ -276,10 +276,14 @@
            color-scheme: only light prevents mobile browsers from auto-darkening
            the white background when the phone is in system dark mode. */
         .resume-page {
-            width: 210mm; height: 297mm; background: #ffffff !important;
+            width: 210mm; height: 297mm; 
+            background-color: rgba(255,255,255,0.99) !important;
+            background-image: linear-gradient(rgba(255,255,255,0.99), rgba(255,255,255,0.99)) !important;
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             position: relative; overflow: hidden; flex-shrink: 0;
             color-scheme: only light;
+            forced-color-adjust: none;
+            -webkit-forced-color-adjust: none;
         }
 
         /* .resume-canvas holds the actual template markup. Its width/transform are
@@ -288,16 +292,22 @@
            fits inside the single 297mm-tall page above. At scale 1 it is exactly
            210mm wide, matching the page exactly. */
         .resume-canvas {
-            width: 210mm; background: #ffffff !important;
+            width: 210mm; 
+            background-color: rgba(255,255,255,0.99) !important;
+            background-image: linear-gradient(rgba(255,255,255,0.99), rgba(255,255,255,0.99)) !important;
             position: absolute; top: 0; left: 0;
             transform-origin: top left;
-            color: #111 !important;
+            color: rgba(17,17,17,0.99) !important;
             color-scheme: only light;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
+            forced-color-adjust: none;
+            -webkit-forced-color-adjust: none;
         }
         .resume-canvas *, .resume-page * {
             color-scheme: only light;
+            forced-color-adjust: none;
+            -webkit-forced-color-adjust: none;
         }
         
         .shared-entry { margin-bottom: 8px; page-break-inside: avoid; }
@@ -565,9 +575,12 @@
                 transform: none !important; margin-bottom: 0 !important;
                 page-break-after: avoid !important; page-break-inside: avoid !important; 
                 border: none !important; overflow: hidden !important; 
+                background: white !important; background-image: none !important;
             }
             .resume-canvas {
                 width: 210mm !important; transform: scale(1) !important;
+                background: white !important; background-image: none !important;
+                color: #111 !important;
             }
             @page { size: A4; margin: 0; }
         }
