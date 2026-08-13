@@ -99,7 +99,9 @@
             
             .preview-pane { 
                 position: fixed; top: 100%; left: 0; width: 100%; height: 100dvh; 
-                z-index: 9999; padding: 15px 10px; padding-top: 70px; 
+                z-index: 9999; padding: 10px; padding-top: 60px;
+                display: flex; align-items: flex-start; justify-content: center;
+                overflow-y: auto;
                 transition: top 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
             }
             
@@ -539,10 +541,26 @@
         .template-art-info-2 .shared-entry-date { font-weight: 700; color: var(--res-accent); font-size: 8.5pt; background: rgba(0,0,0,0.05); display: inline-block; padding: 2px 6px; border-radius: 4px; margin-bottom: 4px;}
 
         @media print {
-            body { background: white; overflow: visible; height: auto; display: block; }
+            body { background: white !important; overflow: visible !important; height: auto !important; display: block !important; }
+            body.mobile-preview-active { overflow: visible !important; }
             .controls-pane, .toast, .close-preview-btn { display: none !important; }
-            .preview-pane { padding: 0; background: transparent; overflow: visible; display: block !important; background-image: none; position: relative !important; top: auto !important; left: auto !important; height: auto !important; transform: none !important; }
-            .resume-page { box-shadow: none !important; margin: 0 !important; width: 210mm !important; height: 297mm !important; page-break-after: avoid !important; page-break-inside: avoid !important; border: none !important; overflow: hidden !important; transform: none !important; }
+            .preview-pane { 
+                padding: 0 !important; background: transparent !important; overflow: visible !important; 
+                display: block !important; background-image: none !important; 
+                position: relative !important; top: auto !important; left: auto !important; 
+                width: auto !important; height: auto !important; 
+                z-index: auto !important;
+            }
+            .resume-page { 
+                box-shadow: none !important; margin: 0 !important; 
+                width: 210mm !important; height: 297mm !important; 
+                transform: none !important; margin-bottom: 0 !important;
+                page-break-after: avoid !important; page-break-inside: avoid !important; 
+                border: none !important; overflow: hidden !important; 
+            }
+            .resume-canvas {
+                width: 210mm !important; transform: scale(1) !important;
+            }
             @page { size: A4; margin: 0; }
         }
     </style>
@@ -712,7 +730,7 @@
             <button class="btn btn-secondary" id="btn-prev" onclick="app.navigate(-1)" style="visibility: hidden;">Back</button>
             <button class="btn btn-primary" id="btn-next" onclick="app.navigate(1)">Next</button>
             <button class="btn btn-primary desktop-hidden" id="btn-preview-mob" onclick="app.toggleMobilePreview()" style="display: none; margin-left: auto; margin-right: 8px;">Preview</button>
-            <button class="btn btn-primary" id="btn-export" onclick="UI.fitToPage(); window.print();" style="display: none; background-color: var(--success-color); border-color: var(--success-color); margin-left: auto;">Export</button>
+            <button class="btn btn-primary" id="btn-export" onclick="app.exportPDF()" style="display: none; background-color: var(--success-color); border-color: var(--success-color); margin-left: auto;">Export</button>
         </div>
     </div>
 
@@ -804,33 +822,37 @@
                 doc.style.width = (210 / best) + 'mm';
                 doc.style.transform = `scale(${best})`;
 
-                // 2. Scale the entire page to fit the viewport
-                const pane = document.querySelector('.preview-pane');
-                if(pane) {
-                    const isMobile = window.innerWidth <= 768;
-                    const availableW = pane.clientWidth - (isMobile ? 20 : 40); 
-                    const availableH = pane.clientHeight - (isMobile ? 85 : 40); // account for close button on mobile
-                    const pagePixelW = page.offsetWidth || 794; 
-                    const pagePixelH = page.offsetHeight || 1123;
+                // 2. Scale the .resume-page to fit inside the viewport on mobile
+                const isMobile = window.innerWidth <= 768;
+                if (isMobile) {
+                    // Use window dimensions since pane may not have layout yet
+                    const availableW = window.innerWidth - 20; // 10px padding each side
+                    const availableH = window.innerHeight - 80; // 60px top padding + 20px bottom
+                    const pagePixelW = 794; // 210mm in pixels at 96dpi
+                    const pagePixelH = 1123; // 297mm in pixels at 96dpi
                     
-                    if (isMobile && availableW > 0 && availableH > 0) {
-                        // On mobile, guarantee the whole A4 page is visible without scrolling
-                        const scaleW = availableW / pagePixelW;
-                        const scaleH = availableH / pagePixelH;
-                        const scale = Math.min(scaleW, scaleH, 1);
-                        
-                        page.style.transform = `scale(${scale})`;
-                        page.style.transformOrigin = 'top center';
-                        page.style.marginBottom = `-${pagePixelH * (1 - scale)}px`;
-                    } else if (availableW < pagePixelW && availableW > 0) {
-                        // On desktop, just scale width if pane is too narrow
-                        const scale = availableW / pagePixelW;
-                        page.style.transform = `scale(${scale})`;
-                        page.style.transformOrigin = 'top center';
-                        page.style.marginBottom = `-${pagePixelH * (1 - scale)}px`;
-                    } else {
-                        page.style.transform = 'none';
-                        page.style.marginBottom = '0';
+                    const scaleW = availableW / pagePixelW;
+                    const scaleH = availableH / pagePixelH;
+                    const scale = Math.min(scaleW, scaleH, 1);
+                    
+                    page.style.transform = `scale(${scale})`;
+                    page.style.transformOrigin = 'top center';
+                    page.style.marginBottom = `-${pagePixelH * (1 - scale)}px`;
+                } else {
+                    // Desktop: only scale if pane is narrower than the A4 page
+                    const pane = document.querySelector('.preview-pane');
+                    if(pane) {
+                        const availableW = pane.clientWidth - 40;
+                        const pagePixelW = page.offsetWidth || 794;
+                        if (availableW < pagePixelW && availableW > 0) {
+                            const scale = availableW / pagePixelW;
+                            page.style.transform = `scale(${scale})`;
+                            page.style.transformOrigin = 'top center';
+                            page.style.marginBottom = `-${page.offsetHeight * (1 - scale)}px`;
+                        } else {
+                            page.style.transform = 'none';
+                            page.style.marginBottom = '0';
+                        }
                     }
                 }
             },
@@ -896,7 +918,33 @@
 
             toggleMobilePreview: function() {
                 document.body.classList.toggle('mobile-preview-active');
-                if(document.body.classList.contains('mobile-preview-active')) UI.fitToPage();
+                if(document.body.classList.contains('mobile-preview-active')) {
+                    // Wait for the slide animation to finish so the pane has layout
+                    setTimeout(() => UI.fitToPage(), 450);
+                }
+            },
+            exportPDF: function() {
+                const isMobile = window.innerWidth <= 768;
+                const page = document.getElementById('resume-page');
+                const doc = document.getElementById('resume-document');
+                if (isMobile) {
+                    // Temporarily reset all mobile scaling so print gets a clean A4
+                    if(page) { page.style.transform = 'none'; page.style.marginBottom = '0'; }
+                    // Reset the canvas to its natural fit
+                    if(doc) { doc.style.width = '210mm'; doc.style.transform = 'scale(1)'; }
+                }
+                // Re-run the content-fitting logic at full A4 size
+                UI.fitToPage();
+                // On mobile, strip the viewport scaling we just re-applied
+                if (isMobile && page) {
+                    page.style.transform = 'none';
+                    page.style.marginBottom = '0';
+                }
+                window.print();
+                // After print dialog closes, re-apply mobile scaling
+                if (isMobile) {
+                    setTimeout(() => UI.fitToPage(), 500);
+                }
             },
             init: function() {
                 this.updateThemeIcons();
