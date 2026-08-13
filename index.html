@@ -368,10 +368,10 @@
         .template-swiss .shared-entry-sub { font-weight: 700; color: #000; }
         .template-swiss .shared-entry-date { color: var(--res-accent); font-weight: 700; font-size: 8pt; text-transform: uppercase;}
 
-        .template-infographic { display: flex; padding: 0; }
-        .template-infographic .res-sidebar { width: 35%; background-color: var(--res-accent); color: white; padding: 15mm 10mm; }
+        .template-infographic { display: flex; padding: 0; min-height: 100%; }
+        .template-infographic .res-sidebar { width: 35%; background-color: var(--res-accent); color: white; padding: 15mm 10mm; container-type: inline-size; }
         .template-infographic .res-main { width: 65%; padding: 15mm 12mm; background: white; }
-        .template-infographic .res-name { font-family: var(--font-header); font-size: 20pt; font-weight: 900; color: white; line-height: 1.1; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; white-space: nowrap;}
+        .template-infographic .res-name { font-family: var(--font-header); font-size: clamp(12pt, 12cqi, 22pt); font-weight: 900; color: white; line-height: 1.1; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; white-space: normal; word-wrap: break-word; overflow-wrap: break-word; }
         .template-infographic .info-contact-item { display: flex; align-items: center; gap: 10px; font-family: var(--font-body); font-size: 8.5pt; margin-bottom: 12px; color: rgba(255,255,255,0.9); }
         .template-infographic .info-icon { width: 16px; height: 16px; flex-shrink: 0; }
         .template-infographic .res-section-title { font-family: var(--font-header); font-size: 13pt; font-weight: 800; color: var(--res-accent); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; display: flex; align-items: center; gap: 8px;}
