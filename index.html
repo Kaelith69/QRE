@@ -803,6 +803,24 @@
 
                 doc.style.width = (210 / best) + 'mm';
                 doc.style.transform = `scale(${best})`;
+
+                // 2. Scale the entire page to fit the viewport (especially on mobile)
+                const pane = document.querySelector('.preview-pane');
+                if(pane) {
+                    const availableW = pane.clientWidth - 40; // 20px padding
+                    const pagePixelW = page.offsetWidth || 794; 
+                    
+                    if (availableW < pagePixelW && availableW > 0) {
+                        const scale = availableW / pagePixelW;
+                        page.style.transform = `scale(${scale})`;
+                        page.style.transformOrigin = 'top center';
+                        // Reduce the layout footprint so it doesn't leave a massive blank scroll area
+                        page.style.marginBottom = `-${page.offsetHeight * (1 - scale)}px`;
+                    } else {
+                        page.style.transform = 'none';
+                        page.style.marginBottom = '0';
+                    }
+                }
             },
 
             fitToPageDebounced: function(delay = 120) {
