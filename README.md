@@ -4,87 +4,135 @@
 
 <br>
 
-# Polished Dynamic Resume Builder
+# ✨ Polished Dynamic Resume Builder
 
-**A pure client-side application for generating and exporting structured, multi-template resumes using raw HTML and CSS.**
+**A zero-dependency, fully responsive, client-side resume builder with 18 templates, real-time preview, GitHub integration, and native PDF export.**
 
 <img src="./assets/license.svg" alt="MIT License">
 
+<br>
+
+**[Live Demo](#quick-start)** · **[Features](#features)** · **[Templates](#-templates)** · **[Usage](#usage)**
+
 </div>
+
+---
 
 ## Overview
 
-A browser-based resume builder that stores resume information as structured JSON state and dynamically renders it into a variety of visual templates using native DOM APIs. Everything runs entirely within `index.html`.
+A browser-based resume builder that runs entirely inside a single `index.html` file. No frameworks, no build steps, no backend, no dependencies — just open it in a browser and start building.
 
-### What it does
+Your data is stored as a structured JSON state object. Every keystroke triggers a real-time re-render of the selected template directly into a pixel-perfect A4 preview canvas. Export to PDF using the browser's native print engine.
 
-It provides a user interface to input personal details, experience, education, skills, and certifications. This data updates a central state object. A render function takes this state, selects a layout template, and outputs HTML directly into a preview canvas. The canvas is then scaled to fit a fixed A4 page proportion for native browser PDF export.
+## Features
 
-### Why it exists
+### 🖊️ Step-by-Step Wizard
+A 6-step guided flow walks you through building your resume:
 
-To provide a simple, zero-dependency method for generating polished resumes without requiring external APIs, backend services, or complex build pipelines.
+| Step | What you fill in |
+|------|-----------------|
+| **1. Info** | Name, email, phone, location, website/LinkedIn, professional summary |
+| **2. Experience** | Job titles, companies, dates, bullet-point descriptions |
+| **3. Education** | Institutions, degrees, streams, graduation years |
+| **4. Skills** | Technical skills & languages with proficiency levels (Beginner → Expert) |
+| **5. Projects** | GitHub repos (auto-fetched) + custom manual projects of any kind |
+| **6. Design** | Template, typography, accent color selection + live preview + PDF export |
+
+### 🔗 GitHub Integration
+Enter any GitHub username and click **Fetch** to pull public repositories. Select which repos to include on your resume — the repo name, primary language, and description are automatically populated.
+
+### 🛠️ Custom Projects
+For projects that aren't on GitHub (civil engineering, research, mechanical, theoretical, etc.), add them manually with:
+- Project name & date
+- Project link / tech stack
+- Full description
+
+### 🎨 18 Resume Templates
+
+| Template | Style |
+|----------|-------|
+| **Classic** | Centered header, clean traditional layout |
+| **Modern** | Flexbox sidebar with colored left column |
+| **Minimalist** | Left-aligned, two-column with minimalist typography |
+| **Professional** | Thick top border with shaded section headers |
+| **Creative** | High-contrast colored sidebar with bold layout |
+| **Executive** | Centered, uppercase heavy, commanding presence |
+| **Tech** | Monospace fonts, dark accents, terminal-inspired headers |
+| **Claude** | Elegant serif with italicized section headers |
+| **Swiss** | Lowercase, heavy weights, right-aligned two-column grid |
+| **Infographic** | Sidebar with timeline icons and skill progress bars |
+| **Dashboard** | Card-based CSS multi-column grid layout |
+| **Min-Info** | Oversized text with dot-tracker skill proficiencies |
+| **Max-Info** | Dark mode, high contrast, blocky with heavy borders |
+| **Art-Info** | Organic blob shapes with clean timeline layout |
+| **Art-Info 0** | Brutalist aesthetic with thick solid borders |
+| **Art-Info 4** | Glassmorphism with blurred circles and translucent panels |
+| **Comic** | Comic book panels, rotated elements, drop shadows |
+| **Art Info 2** | Data-viz layout with CSS-rendered pie and bar charts |
+
+### 🔤 8 Typography Pairs
+
+| Name | Header Font | Body Font |
+|------|------------|-----------|
+| Elegant | Merriweather | Source Sans 3 |
+| Modern | Montserrat | Lato |
+| Technical | Roboto Slab | Roboto |
+| Classic | Playfair Display | Open Sans |
+| Chic | Cormorant Garamond | Proza Libre |
+| Bold | Oswald | Inter |
+| Claude | Fraunces | Inter |
+| Swiss | Helvetica Neue | Helvetica Neue |
+
+### 🎨 8 Accent Colors
+Slate · Navy · Emerald · Burgundy · Purple · Teal · Rust · Black
+
+### 🌙 Dark Mode
+Full dark/light theme toggle for the editor UI. The resume preview always renders with its own template-specific colors regardless of editor theme.
+
+### 💾 Local Storage
+Click **Save** to persist your entire resume state to `localStorage`. Click **Load** to restore it. Your data never leaves your browser.
+
+### 📱 Fully Responsive (Mobile-First)
+
+The app is fully optimized for smartphones:
+
+- **On mobile (< 768px):** The live preview is hidden. You fill out your resume step-by-step in a full-screen wizard. On the final Design step, a **Preview** button slides the resume into view as a full-screen overlay, perfectly scaled to fit your phone screen. A floating **✕** button returns you to the editor.
+- **On desktop:** The classic side-by-side layout with real-time preview is preserved exactly as-is.
+
+### 📄 PDF Export
+
+Click **Export** to generate a pixel-perfect A4 PDF using the browser's native `window.print()` functionality. The app uses a custom `UI.fitToPage()` algorithm that:
+
+1. Measures your resume content height
+2. Binary-searches for the optimal `transform: scale()` value
+3. Inflates the canvas width inversely so the final output is always exactly 210mm × 297mm
+4. On mobile, temporarily resets all viewport scaling before triggering print
+
+No external PDF libraries. No server calls. What you see is exactly what you get.
 
 ## Architecture
-
-The application is built without virtual DOMs or external frameworks. It uses vanilla JavaScript to bind form inputs to a central state, which triggers a complete re-render of the template string upon modification.
 
 <div align="center">
   <img src="./assets/architecture.svg" alt="Architecture Diagram" width="100%">
 </div>
 
-## Data Flow
+The application is built without virtual DOMs or external frameworks. Vanilla JavaScript binds form inputs to a central `app.state` object, which triggers a complete re-render of the selected template upon any modification.
 
-Data moves from user input directly into the central state, which triggers a synchronous string-based HTML generation cycle.
+## Data Flow
 
 <div align="center">
   <img src="./assets/dataflow.svg" alt="Data Flow Diagram" width="100%">
 </div>
 
-## Templates
-
-The rendering engine supports 18 distinct templates, each defining its own layout, typography, and visual density. The available templates are:
-
-- **classic**: Centered header, clean traditional layout.
-- **modern**: Flexbox-based with a colored left sidebar and white main column.
-- **minimal**: Left-aligned, two-column sections with minimalist typography.
-- **professional**: Thick top border with shaded section headers.
-- **creative**: High-contrast colored sidebar with a bright layout.
-- **executive**: Centered, uppercase heavy typography for a commanding presence.
-- **tech**: Courier/monospace fonts, dark accents, terminal-like section headers.
-- **claude**: Elegant serif typography with italicized section headers.
-- **swiss**: Lowercase, heavy weights, strictly right-aligned two-column grid.
-- **infographic**: Sidebar layout featuring timeline icons and skill progress bars.
-- **dashboard**: A card-based grid layout using CSS multi-column properties.
-- **min-info**: Massive text with dot trackers for skill proficiencies.
-- **max-info**: Dark mode, high contrast, blocky layouts with heavy borders.
-- **art-info**: Blob shapes background with a clean timeline layout.
-- **art-info-0**: Brutalist aesthetic with thick solid borders.
-- **art-info-4**: Glassmorphism with blurred circles and semi-transparent panels.
-- **comic**: Comic book style featuring rotated elements, thick borders, and heavy drop shadows.
-- **art-info-2**: Data-heavy layout featuring CSS-rendered pie and bar charts.
-
-## Layout System
-
-The layout engine uses standard CSS. Depending on the template, it utilizes:
-- **Flexbox** (`display: flex`) for sidebars, headers, and linear flows.
-- **CSS Grid** (`display: grid`) for specific component alignments.
-- **CSS Multi-column** (`column-count: 2`) to distribute content across available columns in templates like `dashboard` and `max-info`.
-
-There is no virtual DOM or masonry engine; layout is purely handled by the browser's CSS renderer. 
-
-## Technology
-
-- **HTML5**: Structure and DOM container.
-- **CSS3**: Variables, Flexbox, Grid, Multi-column layout, and Print Media Queries.
-- **Vanilla JavaScript**: State management, event handling, and template literal rendering.
-- **GitHub API**: (Optional) Fetches public repositories for project inclusion.
-- **Google Fonts**: Typography system.
+```
+User Input → app.state (JSON) → renderPreview() → Template HTML → A4 Canvas → PDF
+```
 
 ## Project Structure
 
 ```
 project/
-├── index.html
+├── index.html          # The entire application (HTML + CSS + JS)
 ├── assets/
 │   ├── architecture.svg
 │   ├── banner.svg
@@ -95,38 +143,62 @@ project/
 
 ## Quick Start
 
-No installation, build step, or local server is required. 
+No installation, build step, or local server is required.
 
-1. Clone or download the repository.
-2. Open `index.html` directly in any modern web browser.
+```bash
+# Clone the repository
+git clone https://github.com/Kaelith69/QRE.git
+
+# Open in browser
+open index.html
+```
+
+Or simply download the ZIP and double-click `index.html`.
 
 ## Usage
 
-1. Fill out your information using the controls pane on the left.
-2. Add your GitHub username to optionally fetch public repositories.
-3. Select a template, font pair, and accent color.
-4. Preview the rendering in real-time on the right.
-5. Click **Save** to persist the JSON state locally via `localStorage`.
+1. **Fill in your details** across the 6 wizard steps.
+2. **Fetch GitHub repos** or add custom projects manually.
+3. **Pick a template**, font pair, and accent color.
+4. **Preview** your resume in real-time (desktop) or via the Preview button (mobile).
+5. **Export** to PDF with one click.
+6. **Save** your progress to local storage at any time.
 
-## PDF Workflow
+## Technology
 
-The application does not use external PDF generation services (like Puppeteer or wkhtmltopdf). 
-
-Instead, a custom JavaScript function (`UI.fitToPage`) uses `transform: scale()` to uniformly shrink the rendered resume until it fits precisely within a fixed `210mm` x `297mm` A4 container. Export is achieved entirely using the browser's native `window.print()` functionality, ensuring the PDF precisely matches the scaled preview.
-
-## Design Principles
-
-- **Zero dependencies**: No `npm install`, no bundlers.
-- **Single Source of Truth**: `app.state` drives everything.
-- **Predictable Output**: The layout strictly conforms to A4 dimensions before invoking the print dialog.
+| Layer | Technology |
+|-------|-----------|
+| Structure | HTML5 |
+| Styling | CSS3 (Variables, Flexbox, Grid, Multi-column, Print Queries, Media Queries) |
+| Logic | Vanilla JavaScript (ES6+) |
+| Fonts | Google Fonts (10 font families) |
+| API | GitHub REST API (optional, for fetching repos) |
+| Storage | Browser `localStorage` |
+| PDF | Native `window.print()` with CSS `@media print` |
 
 ## Browser Compatibility
 
-Compatible with modern browsers supporting ES6, CSS Flexbox/Grid, and `window.print()`. Tested primarily in Chromium-based browsers (Chrome, Edge) for reliable print-to-PDF output.
+Tested and optimized for:
+- ✅ Chrome / Chromium-based (recommended for best PDF output)
+- ✅ Edge
+- ✅ Firefox
+- ✅ Safari / Mobile Safari
+- ✅ Chrome for Android
+
+## Design Principles
+
+- **Zero dependencies** — No `npm install`, no bundlers, no build pipeline.
+- **Single file** — The entire app lives in `index.html`.
+- **Single source of truth** — `app.state` drives every render.
+- **Predictable output** — A4 dimensions are enforced before invoking the print dialog.
+- **Progressive enhancement** — Works on desktop and mobile with the same codebase.
 
 ## License
 
 This project is licensed under the MIT License.
 
 ---
-*Built entirely with client-side web technologies.*
+
+<div align="center">
+  <sub>Built entirely with client-side web technologies. No frameworks were harmed in the making of this project.</sub>
+</div>
