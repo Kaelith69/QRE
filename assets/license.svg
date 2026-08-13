@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 30" width="120" height="30">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&amp;display=swap');
+      .text { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; }
+    </style>
+  </defs>
+  <rect width="120" height="30" rx="4" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1" />
+  <rect width="60" height="30" rx="4" fill="#0f172a" />
+  <path d="M 56 0 h 4 v 30 h -4 Z" fill="#0f172a" />
+  <text x="30" y="19" fill="#ffffff" class="text" text-anchor="middle">License</text>
+  <text x="90" y="19" fill="#0f172a" class="text" text-anchor="middle">MIT</text>
+</svg>

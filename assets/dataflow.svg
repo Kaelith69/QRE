@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap');
+      .bg { fill: #ffffff; }
+      .node { fill: #f1f5f9; stroke: #e2e8f0; stroke-width: 2; rx: 6; }
+      .node-hl { fill: #eff6ff; stroke: #2563eb; stroke-width: 2; rx: 6; }
+      .node-num { fill: #2563eb; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 14px; }
+      .text-title { fill: #0f172a; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; }
+      .text-code { fill: #64748b; font-family: 'monospace'; font-size: 12px; }
+      .arrow { stroke: #cbd5e1; stroke-width: 2; fill: none; }
+      .arrow-head { fill: #cbd5e1; }
+    </style>
+    <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" class="arrow-head" />
+    </marker>
+  </defs>
+  <rect width="800" height="600" class="bg" />
+
+  <g transform="translate(250, 50)">
+    <!-- 1. Form Input -->
+    <rect x="0" y="0" width="260" height="60" class="node" />
+    <text x="15" y="25" class="node-num">1</text>
+    <text x="40" y="25" class="text-title">Form Input</text>
+    <text x="40" y="45" class="text-code">oninput / onclick events</text>
+    
+    <line x1="130" y1="60" x2="130" y2="100" class="arrow" marker-end="url(#arrowhead2)" />
+
+    <!-- 2. State Update -->
+    <rect x="0" y="100" width="260" height="60" class="node" />
+    <text x="15" y="125" class="node-num">2</text>
+    <text x="40" y="125" class="text-title">State Update</text>
+    <text x="40" y="145" class="text-code">app.updateFieldById()</text>
+
+    <line x1="130" y1="160" x2="130" y2="200" class="arrow" marker-end="url(#arrowhead2)" />
+
+    <!-- 3. Render Trigger -->
+    <rect x="0" y="200" width="260" height="60" class="node-hl" />
+    <text x="15" y="225" class="node-num">3</text>
+    <text x="40" y="225" class="text-title">Render Trigger</text>
+    <text x="40" y="245" class="text-code">app.renderPreview()</text>
+
+    <line x1="130" y1="260" x2="130" y2="300" class="arrow" marker-end="url(#arrowhead2)" />
+
+    <!-- 4. HTML Generation -->
+    <rect x="0" y="300" width="260" height="60" class="node" />
+    <text x="15" y="325" class="node-num">4</text>
+    <text x="40" y="325" class="text-title">HTML Generation</text>
+    <text x="40" y="345" class="text-code">Template Literal Concatenation</text>
+
+    <line x1="130" y1="360" x2="130" y2="400" class="arrow" marker-end="url(#arrowhead2)" />
+
+    <!-- 5. DOM Inject -->
+    <rect x="0" y="400" width="260" height="60" class="node" />
+    <text x="15" y="425" class="node-num">5</text>
+    <text x="40" y="425" class="text-title">DOM Injection</text>
+    <text x="40" y="445" class="text-code">canvas.innerHTML = html</text>
+
+    <line x1="130" y1="460" x2="130" y2="500" class="arrow" marker-end="url(#arrowhead2)" />
+
+    <!-- 6. Scale and Fit -->
+    <rect x="0" y="500" width="260" height="60" class="node" />
+    <text x="15" y="525" class="node-num">6</text>
+    <text x="40" y="525" class="text-title">Scale &amp; Fit</text>
+    <text x="40" y="545" class="text-code">UI.fitToPageDebounced()</text>
+  </g>
+</svg>

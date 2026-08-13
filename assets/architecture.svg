@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="100%" height="100%">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap');
+      .bg { fill: #ffffff; }
+      .box { fill: #f1f5f9; stroke: #e2e8f0; stroke-width: 2; rx: 8; }
+      .box-primary { fill: #eff6ff; stroke: #2563eb; stroke-width: 2; rx: 8; }
+      .text-title { fill: #0f172a; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 16px; text-anchor: middle; }
+      .text-desc { fill: #64748b; font-family: 'Inter', sans-serif; font-weight: 400; font-size: 12px; text-anchor: middle; }
+      .arrow { stroke: #64748b; stroke-width: 2; fill: none; }
+      .arrow-head { fill: #64748b; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" class="arrow-head" />
+    </marker>
+  </defs>
+  <rect width="800" height="400" class="bg" />
+
+  <!-- App State -->
+  <rect x="50" y="150" width="140" height="80" class="box" />
+  <text x="120" y="185" class="text-title">App State</text>
+  <text x="120" y="205" class="text-desc">JSON Object</text>
+
+  <!-- Template Renderer -->
+  <rect x="250" y="150" width="140" height="80" class="box-primary" />
+  <text x="320" y="185" class="text-title">Template Renderer</text>
+  <text x="320" y="205" class="text-desc">Raw HTML Strings</text>
+
+  <!-- DOM / Resume Canvas -->
+  <rect x="450" y="150" width="140" height="80" class="box" />
+  <text x="520" y="185" class="text-title">Resume Canvas</text>
+  <text x="520" y="205" class="text-desc">transform: scale()</text>
+
+  <!-- Browser Print -->
+  <rect x="650" y="150" width="120" height="80" class="box" />
+  <text x="710" y="185" class="text-title">Browser Print</text>
+  <text x="710" y="205" class="text-desc">Native PDF Export</text>
+
+  <!-- Arrows -->
+  <line x1="190" y1="190" x2="240" y2="190" class="arrow" marker-end="url(#arrowhead)" />
+  <line x1="390" y1="190" x2="440" y2="190" class="arrow" marker-end="url(#arrowhead)" />
+  <line x1="590" y1="190" x2="640" y2="190" class="arrow" marker-end="url(#arrowhead)" />
+</svg>
