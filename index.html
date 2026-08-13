@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
     <title>Polished Dynamic Resume Builder</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Proza+Libre:wght@400;600&family=Oswald:wght@400;600;700&family=Merriweather:wght@400;700;900&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;600;700;800&family=Lato:wght@400;700&family=Roboto+Slab:wght@400;700&family=Roboto:wght@400;500;700&family=Playfair+Display:wght@400;700;900&family=Open+Sans:wght@400;600&family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Work+Sans:wght@400;600&display=swap');
@@ -273,9 +274,10 @@
         /* .resume-page is the fixed, physical A4 sheet: exactly 210mm x 297mm, always,
            on screen and on export. Nothing ever grows or clips outside of it. */
         .resume-page {
-            width: 210mm; height: 297mm; background: white;
+            width: 210mm; height: 297mm; background: white !important;
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             position: relative; overflow: hidden; flex-shrink: 0;
+            color-scheme: only light;
         }
 
         /* .resume-canvas holds the actual template markup. Its width/transform are
@@ -284,10 +286,11 @@
            fits inside the single 297mm-tall page above. At scale 1 it is exactly
            210mm wide, matching the page exactly. */
         .resume-canvas {
-            width: 210mm; background: white;
+            width: 210mm; background: white !important;
             position: absolute; top: 0; left: 0;
             transform-origin: top left;
-            color: #111;
+            color: #111 !important;
+            color-scheme: only light;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
         }
