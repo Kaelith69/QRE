@@ -542,7 +542,7 @@
             body { background: white; overflow: visible; height: auto; display: block; }
             .controls-pane, .toast, .close-preview-btn { display: none !important; }
             .preview-pane { padding: 0; background: transparent; overflow: visible; display: block !important; background-image: none; position: relative !important; top: auto !important; left: auto !important; height: auto !important; transform: none !important; }
-            .resume-page { box-shadow: none; margin: 0; width: 210mm; height: 297mm; page-break-after: avoid; page-break-inside: avoid; border: none; overflow: hidden; transform: none !important; }
+            .resume-page { box-shadow: none !important; margin: 0 !important; width: 210mm !important; height: 297mm !important; page-break-after: avoid !important; page-break-inside: avoid !important; border: none !important; overflow: hidden !important; transform: none !important; }
             @page { size: A4; margin: 0; }
         }
     </style>
@@ -804,18 +804,30 @@
                 doc.style.width = (210 / best) + 'mm';
                 doc.style.transform = `scale(${best})`;
 
-                // 2. Scale the entire page to fit the viewport (especially on mobile)
+                // 2. Scale the entire page to fit the viewport
                 const pane = document.querySelector('.preview-pane');
                 if(pane) {
-                    const availableW = pane.clientWidth - 40; // 20px padding
+                    const isMobile = window.innerWidth <= 768;
+                    const availableW = pane.clientWidth - (isMobile ? 20 : 40); 
+                    const availableH = pane.clientHeight - (isMobile ? 85 : 40); // account for close button on mobile
                     const pagePixelW = page.offsetWidth || 794; 
+                    const pagePixelH = page.offsetHeight || 1123;
                     
-                    if (availableW < pagePixelW && availableW > 0) {
+                    if (isMobile && availableW > 0 && availableH > 0) {
+                        // On mobile, guarantee the whole A4 page is visible without scrolling
+                        const scaleW = availableW / pagePixelW;
+                        const scaleH = availableH / pagePixelH;
+                        const scale = Math.min(scaleW, scaleH, 1);
+                        
+                        page.style.transform = `scale(${scale})`;
+                        page.style.transformOrigin = 'top center';
+                        page.style.marginBottom = `-${pagePixelH * (1 - scale)}px`;
+                    } else if (availableW < pagePixelW && availableW > 0) {
+                        // On desktop, just scale width if pane is too narrow
                         const scale = availableW / pagePixelW;
                         page.style.transform = `scale(${scale})`;
                         page.style.transformOrigin = 'top center';
-                        // Reduce the layout footprint so it doesn't leave a massive blank scroll area
-                        page.style.marginBottom = `-${page.offsetHeight * (1 - scale)}px`;
+                        page.style.marginBottom = `-${pagePixelH * (1 - scale)}px`;
                     } else {
                         page.style.transform = 'none';
                         page.style.marginBottom = '0';
