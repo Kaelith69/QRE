@@ -196,7 +196,7 @@
         .btn-add:hover { background: rgba(37, 99, 235, 0.1); opacity: 1; transform: translateY(-1px); }
 
         .github-input-wrapper { display: flex; gap: 6px; }
-        #repo-list { display: flex; flex-direction: column; gap: 6px; max-height: 250px; overflow-y: auto; padding-right: 4px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 8px; background: var(--bg-input); }
+        #repo-list { display: flex; flex-direction: column; gap: 6px; min-height: 120px; max-height: 250px; flex-shrink: 0; overflow-y: auto; padding-right: 4px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 8px; background: var(--bg-input); }
         .repo-item { display: flex; align-items: flex-start; gap: 8px; background: var(--bg-panel); border: 1px solid var(--border-color); padding: 8px; border-radius: 4px; cursor: pointer; }
         .repo-item:hover { border-color: var(--text-muted); }
         .repo-item input[type="checkbox"] { margin-top: 3px; cursor: pointer; accent-color: var(--accent-app); }
@@ -204,20 +204,20 @@
         .repo-name { font-weight: 600; font-size: 0.85rem; color: var(--text-main); }
         .repo-desc { font-size: 0.75rem; color: var(--text-muted); line-height: 1.3; margin-top: 2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;}
 
-        .design-section { margin-bottom: 12px; }
-        .design-label { font-size: 0.75rem; font-weight: 700; color: var(--text-label); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 0.5px;}
-        .design-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(75px, 1fr)); gap: 6px; }
+        .design-section { margin-bottom: 8px; }
+        .design-label { font-size: 0.75rem; font-weight: 700; color: var(--text-label); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px;}
+        .design-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(75px, 1fr)); gap: 4px; }
         .template-card {
             border: 1px solid var(--border-color); border-radius: var(--radius-sm);
-            padding: 8px 4px; text-align: center; cursor: pointer; transition: var(--transition);
+            padding: 6px 4px; text-align: center; cursor: pointer; transition: var(--transition);
             background: var(--bg-panel); font-size: 0.75rem; font-weight: 600; color: var(--text-muted);
         }
         .template-card:hover { border-color: var(--text-muted); color: var(--text-main); }
         .template-card.active { border-color: var(--accent-app); background: var(--bg-active); color: var(--accent-app); box-shadow: inset 0 0 0 1px var(--accent-app); }
         
-        .color-swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+        .color-swatches { display: flex; flex-wrap: wrap; gap: 6px; }
         .swatch {
-            width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+            width: 24px; height: 24px; border-radius: 50%; cursor: pointer;
             border: 2px solid transparent; transition: var(--transition);
         }
         .swatch:hover { transform: scale(1.1); }
