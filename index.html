@@ -88,6 +88,11 @@
             .preview-pane { height: auto; min-height: 45vh; padding: 15px 10px; }
         }
 
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-input); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
         .app-header {
             padding: 12px 20px; border-bottom: 1px solid var(--border-color);
             display: flex; justify-content: space-between; align-items: center; background: var(--bg-panel);
@@ -108,6 +113,14 @@
             background: var(--bg-input); border-bottom: 1px solid var(--border-color);
             position: relative; flex-shrink: 0;
         }
+        .stepper::before {
+            content: ''; position: absolute; top: 24px; left: 40px; right: 40px; height: 2px;
+            background: var(--border-color); z-index: 1;
+        }
+        .stepper-progress {
+            position: absolute; top: 24px; left: 40px; height: 2px; background: var(--accent-app);
+            z-index: 1; transition: width 0.3s ease; width: 0%;
+        }
         .step-indicator {
             position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 4px;
             cursor: pointer; opacity: 0.6; transition: var(--transition);
@@ -118,8 +131,12 @@
             border: 2px solid var(--border-color); display: flex; align-items: center; justify-content: center;
             font-weight: 700; font-size: 0.75rem; color: var(--text-muted); transition: var(--transition);
         }
-        .step-indicator.active .step-num { border-color: var(--accent-app); background: var(--accent-app); color: #fff; }
-        .step-indicator.completed .step-num { border-color: var(--accent-app); color: var(--accent-app); }
+        .step-indicator.active .step-num { border-color: var(--accent-app); background: var(--accent-app); color: #fff; box-shadow: 0 0 0 3px rgba(37,99,235,0.2); }
+        .step-indicator.completed .step-num { border-color: var(--accent-app); background: var(--accent-app); color: transparent; }
+        .step-indicator.completed .step-num::after {
+            content: ''; position: absolute; top: 6px; width: 4px; height: 8px;
+            border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg);
+        }
         .step-label { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; color: var(--text-main); }
 
         .wizard-container { flex-grow: 1; position: relative; overflow: hidden; background: var(--bg-panel); }
@@ -134,36 +151,49 @@
         .step-header h2 { font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 2px;}
         .step-header p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;}
         
-        .input-group { display: flex; flex-direction: column; gap: 4px; }
-        .input-group label { font-size: 0.75rem; font-weight: 600; color: var(--text-label); }
+        .input-group { display: flex; flex-direction: column; gap: 4px; position: relative; margin-bottom: 4px;}
+        .input-group label { font-size: 0.75rem; font-weight: 600; color: var(--text-label); transition: var(--transition); }
+        .input-group:focus-within label { color: var(--accent-app); transform: translateX(2px); }
         
         input[type="text"], input[type="email"], input[type="tel"], textarea, select { 
-            padding: 8px 10px; border: 1px solid var(--border-input); border-radius: var(--radius-sm); 
+            padding: 10px 12px; border: 1px solid var(--border-input); border-radius: var(--radius-sm); 
             font-size: 0.85rem; outline: none; transition: var(--transition); background: var(--bg-input);
             width: 100%; color: var(--text-main);
         }
-        textarea { resize: vertical; min-height: 60px; font-family: inherit; line-height: 1.4; }
-        input:focus, textarea:focus, select:focus { border-color: var(--accent-app); background: var(--bg-panel); box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1); }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        textarea { resize: vertical; min-height: 80px; font-family: inherit; line-height: 1.5; }
+        input:focus, textarea:focus, select:focus { 
+            border-color: var(--accent-app); background: var(--bg-panel); 
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); transform: translateY(-1px);
+        }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
         .dynamic-list { display: flex; flex-direction: column; gap: 10px; }
+        @keyframes slideInFade {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         .entry-card { 
             background: var(--bg-input); border: 1px solid var(--border-color); 
             border-radius: var(--radius-sm); padding: 12px; 
             position: relative; display: flex; flex-direction: column; gap: 8px;
+            animation: slideInFade 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-        .btn-remove {
-            position: absolute; top: 8px; right: 8px; background: transparent; 
-            color: var(--danger-color); border: none; font-size: 1.2rem; line-height: 1;
-            cursor: pointer; opacity: 0.6; transition: var(--transition); padding: 2px;
+        .card-actions { position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; opacity: 0; transition: var(--transition); z-index: 10; }
+        .entry-card:hover .card-actions { opacity: 1; }
+        .btn-icon {
+            background: var(--bg-panel); color: var(--text-muted); border: 1px solid var(--border-color); border-radius: 50%;
+            width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; line-height: 1; cursor: pointer; transition: var(--transition); padding: 0;
         }
-        .btn-remove:hover { opacity: 1; transform: scale(1.1); }
+        .btn-icon:hover { background: var(--bg-hover); color: var(--text-main); transform: scale(1.1); }
+        .btn-icon.danger:hover { background: var(--danger-color); color: white; border-color: var(--danger-color); transform: scale(1.1) rotate(90deg); }
+        
         .btn-add {
-            background: var(--bg-panel); color: var(--accent-app); border: 1px dashed var(--border-input);
-            padding: 8px; text-align: center; border-radius: var(--radius-sm); font-size: 0.85rem;
-            cursor: pointer; font-weight: 600; transition: var(--transition);
+            background: rgba(37, 99, 235, 0.05); color: var(--accent-app); border: 1px dashed var(--accent-app);
+            padding: 10px; text-align: center; border-radius: var(--radius-sm); font-size: 0.85rem;
+            cursor: pointer; font-weight: 600; transition: var(--transition); opacity: 0.8;
         }
-        .btn-add:hover { border-color: var(--accent-app); background: var(--bg-active); }
+        .btn-add:hover { background: rgba(37, 99, 235, 0.1); opacity: 1; transform: translateY(-1px); }
 
         .github-input-wrapper { display: flex; gap: 6px; }
         #repo-list { display: flex; flex-direction: column; gap: 6px; max-height: 250px; overflow-y: auto; padding-right: 4px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 8px; background: var(--bg-input); }
@@ -199,12 +229,14 @@
         }
         .btn { 
             padding: 8px 16px; font-size: 0.85rem; border: none; border-radius: var(--radius-sm); 
-            cursor: pointer; font-weight: 600; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 6px;
+            cursor: pointer; font-weight: 600; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; justify-content: center; gap: 6px;
         }
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .btn:active { transform: translateY(0); }
         .btn-secondary { background: var(--bg-panel); color: var(--text-main); border: 1px solid var(--border-input); }
-        .btn-secondary:hover { background: var(--bg-hover); }
-        .btn-primary { background: var(--accent-app); color: white; }
-        .btn-primary:hover { background: var(--accent-app-hover); }
+        .btn-secondary:hover { background: var(--bg-hover); border-color: var(--border-color); }
+        .btn-primary { background: var(--accent-app); color: white; box-shadow: 0 2px 4px rgba(37,99,235,0.2); }
+        .btn-primary:hover { background: var(--accent-app-hover); box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
 
         .toast {
             position: fixed; top: 15px; left: 50%; transform: translateX(-50%) translateY(-20px); 
@@ -852,6 +884,22 @@
                 this.renderPreview();
             },
 
+            
+            moveItem: function(arrayName, index, direction) {
+                const arr = this.state[arrayName];
+                if (index + direction >= 0 && index + direction < arr.length) {
+                    const temp = arr[index];
+                    arr[index] = arr[index + direction];
+                    arr[index + direction] = temp;
+                    if(arrayName === 'experience') this.renderExperienceUI();
+                    if(arrayName === 'education') this.renderEducationUI();
+                    if(arrayName === 'certifications') this.renderCertificationUI();
+                    if(arrayName === 'skills') this.renderSkillsUI();
+                    if(arrayName === 'langs') this.renderLangsUI();
+                    this.renderPreview();
+                }
+            },
+
             addExperience: function() {
                 this.state.experience.push({ id: 'exp_' + Date.now(), title: '', company: '', date: '', desc: '' });
                 this.renderExperienceUI();
@@ -864,10 +912,10 @@
             },
             renderExperienceUI: function() {
                 const c = document.getElementById('exp-list-ui'); c.innerHTML = '';
-                this.state.experience.forEach(exp => {
+                this.state.experience.forEach((exp, i) => {
                     const el = document.createElement('div'); el.className = 'entry-card';
                     el.innerHTML = `
-                        <button class="btn-remove" onclick="app.removeExperience('${exp.id}')">&times;</button>
+                        <div class="card-actions">${i > 0 ? `<button class="btn-icon" onclick="app.moveItem('experience', ${i}, -1)" title="Move Up">&#8593;</button>` : ''}${i < this.state.experience.length - 1 ? `<button class="btn-icon" onclick="app.moveItem('experience', ${i}, 1)" title="Move Down">&#8595;</button>` : ''}<button class="btn-icon danger" onclick="app.removeExperience('${exp.id}')" title="Remove">&times;</button></div>
                         <div class="grid-2">
                             <div class="input-group"><label>Title</label><input type="text" oninput="app.updateFieldById('experience', '${exp.id}', 'title', this.value)" value="${UI.escapeHtml(exp.title)}"></div>
                             <div class="input-group"><label>Company</label><input type="text" oninput="app.updateFieldById('experience', '${exp.id}', 'company', this.value)" value="${UI.escapeHtml(exp.company)}"></div>
@@ -891,10 +939,10 @@
             },
             renderEducationUI: function() {
                 const c = document.getElementById('edu-list-ui'); c.innerHTML = '';
-                this.state.education.forEach(edu => {
+                this.state.education.forEach((edu, i) => {
                     const el = document.createElement('div'); el.className = 'entry-card';
                     el.innerHTML = `
-                        <button class="btn-remove" onclick="app.removeEducation('${edu.id}')">&times;</button>
+                        <div class="card-actions">${i > 0 ? `<button class="btn-icon" onclick="app.moveItem('education', ${i}, -1)" title="Move Up">&#8593;</button>` : ''}${i < this.state.education.length - 1 ? `<button class="btn-icon" onclick="app.moveItem('education', ${i}, 1)" title="Move Down">&#8595;</button>` : ''}<button class="btn-icon danger" onclick="app.removeEducation('${edu.id}')" title="Remove">&times;</button></div>
                         <div class="input-group"><label>Institution</label><input type="text" oninput="app.updateFieldById('education', '${edu.id}', 'inst', this.value)" value="${UI.escapeHtml(edu.inst)}"></div>
                         <div class="grid-2">
                             <div class="input-group"><label>Degree</label><input type="text" oninput="app.updateFieldById('education', '${edu.id}', 'degree', this.value)" value="${UI.escapeHtml(edu.degree)}"></div>
@@ -918,10 +966,10 @@
             },
             renderCertificationUI: function() {
                 const c = document.getElementById('cert-list-ui'); c.innerHTML = '';
-                this.state.certifications.forEach(cert => {
+                this.state.certifications.forEach((cert, i) => {
                     const el = document.createElement('div'); el.className = 'entry-card';
                     el.innerHTML = `
-                        <button class="btn-remove" onclick="app.removeCertification('${cert.id}')">&times;</button>
+                        <div class="card-actions">${i > 0 ? `<button class="btn-icon" onclick="app.moveItem('certifications', ${i}, -1)" title="Move Up">&#8593;</button>` : ''}${i < this.state.certifications.length - 1 ? `<button class="btn-icon" onclick="app.moveItem('certifications', ${i}, 1)" title="Move Down">&#8595;</button>` : ''}<button class="btn-icon danger" onclick="app.removeCertification('${cert.id}')" title="Remove">&times;</button></div>
                         <div class="input-group"><label>Certification Title</label><input type="text" oninput="app.updateFieldById('certifications', '${cert.id}', 'title', this.value)" value="${UI.escapeHtml(cert.title)}"></div>
                         <div class="grid-2">
                             <div class="input-group"><label>Issuer</label><input type="text" oninput="app.updateFieldById('certifications', '${cert.id}', 'issuer', this.value)" value="${UI.escapeHtml(cert.issuer)}"></div>
@@ -958,10 +1006,10 @@
             },
             renderSkillsUI: function() {
                 const c = document.getElementById('skills-list-ui'); c.innerHTML = '';
-                this.state.skills.forEach(skill => {
+                this.state.skills.forEach((skill, i) => {
                     const el = document.createElement('div'); el.className = 'entry-card';
                     el.innerHTML = `
-                        <button class="btn-remove" onclick="app.removeSkill('${skill.id}')">&times;</button>
+                        <div class="card-actions">${i > 0 ? `<button class="btn-icon" onclick="app.moveItem('skills', ${i}, -1)" title="Move Up">&#8593;</button>` : ''}${i < this.state.skills.length - 1 ? `<button class="btn-icon" onclick="app.moveItem('skills', ${i}, 1)" title="Move Down">&#8595;</button>` : ''}<button class="btn-icon danger" onclick="app.removeSkill('${skill.id}')" title="Remove">&times;</button></div>
                         <div class="grid-2">
                             <div class="input-group">
                                 <label>Skill Name</label>
@@ -994,10 +1042,10 @@
             },
             renderLangsUI: function() {
                 const c = document.getElementById('langs-list-ui'); c.innerHTML = '';
-                this.state.langs.forEach(lang => {
+                this.state.langs.forEach((lang, i) => {
                     const el = document.createElement('div'); el.className = 'entry-card';
                     el.innerHTML = `
-                        <button class="btn-remove" onclick="app.removeLang('${lang.id}')">&times;</button>
+                        <div class="card-actions">${i > 0 ? `<button class="btn-icon" onclick="app.moveItem('langs', ${i}, -1)" title="Move Up">&#8593;</button>` : ''}${i < this.state.langs.length - 1 ? `<button class="btn-icon" onclick="app.moveItem('langs', ${i}, 1)" title="Move Down">&#8595;</button>` : ''}<button class="btn-icon danger" onclick="app.removeLang('${lang.id}')" title="Remove">&times;</button></div>
                         <div class="grid-2">
                             <div class="input-group">
                                 <label>Language</label>
@@ -1633,6 +1681,9 @@
                 document.querySelectorAll('.step-indicator').forEach((el, i) => {
                     el.className = `step-indicator ${i === this.currentStep ? 'active' : i < this.currentStep ? 'completed' : ''}`;
                 });
+                
+                const progress = document.getElementById('stepper-progress');
+                if(progress) progress.style.width = ((this.currentStep / (steps.length - 1)) * 100) + '%';
             },
 
             saveProfile: function() {
