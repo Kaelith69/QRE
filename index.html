@@ -605,7 +605,7 @@
             </div>
 
             <div class="step" data-step="4">
-                <div class="step-header"><h2>GitHub Projects</h2><p>Fetch and select public repositories.</p></div>
+                <div class="step-header"><h2>Projects</h2><p>Fetch GitHub repositories or add custom projects manually.</p></div>
                 
                 <div class="input-group">
                     <label>Fetch GitHub Repositories</label>
@@ -617,6 +617,11 @@
                 <div id="repo-list">
                     <div style="text-align: center; color: var(--text-muted); font-size: 0.75rem; padding: 10px;">Enter username to fetch projects.</div>
                 </div>
+
+                <hr style="border:0; border-top: 1px solid var(--border-color); margin: 12px 0;">
+                <div class="step-header" style="margin-top: 4px;"><h2>Custom Projects</h2><p>Add manual projects if you don't have GitHub or want to add other types of projects.</p></div>
+                <div id="projects-list-ui" class="dynamic-list"></div>
+                <button class="btn-add" onclick="app.addProject()">+ Add Custom Project</button>
             </div>
 
             <div class="step" data-step="5">
@@ -782,7 +787,7 @@
         };
 
         const STORAGE_KEY = 'resume_builder_v5_data';
-        const stepNames = ['Info', 'Exp', 'Edu', 'Skills', 'GitHub', 'Design'];
+        const stepNames = ['Info', 'Exp', 'Edu', 'Skills', 'Projects', 'Design'];
 
         const app = {
             state: {
@@ -814,7 +819,8 @@
                 ],
                 github: 'torvalds',
                 fetchedRepos: [],
-                selectedRepoIds: []
+                selectedRepoIds: [],
+                projects: []
             },
             currentStep: 0,
 
@@ -896,6 +902,7 @@
                     if(arrayName === 'certifications') this.renderCertificationUI();
                     if(arrayName === 'skills') this.renderSkillsUI();
                     if(arrayName === 'langs') this.renderLangsUI();
+                    if(arrayName === 'projects') this.renderProjectsUI();
                     this.renderPreview();
                 }
             },
@@ -992,6 +999,7 @@
                 this.renderSkillsUI();
                 this.renderLangsUI();
                 this.renderGitHubUI();
+                this.renderProjectsUI();
             },
 
             addSkill: function() {
@@ -1040,6 +1048,52 @@
                 this.renderLangsUI();
                 this.renderPreview();
             },
+
+            addProject: function() {
+                this.state.projects.push({ id: 'proj_' + Date.now(), name: '', desc: '', link: '', date: '' });
+                this.renderProjectsUI();
+                this.renderPreview();
+            },
+            removeProject: function(id) {
+                this.state.projects = this.state.projects.filter(e => e.id !== id);
+                this.renderProjectsUI();
+                this.renderPreview();
+            },
+            renderProjectsUI: function() {
+                const c = document.getElementById('projects-list-ui');
+                if(!c) return;
+                c.innerHTML = '';
+                this.state.projects.forEach((proj, i) => {
+                    const el = document.createElement('div'); el.className = 'entry-card';
+                    el.innerHTML = `
+                        <div class="card-actions">${i > 0 ? `<button class="btn-icon" onclick="app.moveItem('projects', ${i}, -1)" title="Move Up">&#8593;</button>` : ''}${i < this.state.projects.length - 1 ? `<button class="btn-icon" onclick="app.moveItem('projects', ${i}, 1)" title="Move Down">&#8595;</button>` : ''}<button class="btn-icon danger" onclick="app.removeProject('${proj.id}')" title="Remove">&times;</button></div>
+                        <div class="grid-2">
+                            <div class="input-group">
+                                <label>Project Name</label>
+                                <input type="text" oninput="app.updateFieldById('projects', '${proj.id}', 'name', this.value)" value="${UI.escapeHtml(proj.name)}">
+                            </div>
+                            <div class="input-group">
+                                <label>Date / Year</label>
+                                <input type="text" oninput="app.updateFieldById('projects', '${proj.id}', 'date', this.value)" value="${UI.escapeHtml(proj.date)}">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Project Link / Tech</label>
+                            <input type="text" oninput="app.updateFieldById('projects', '${proj.id}', 'link', this.value)" value="${UI.escapeHtml(proj.link)}">
+                        </div>
+                        <div class="input-group">
+                            <label>Description</label>
+                            <textarea style="resize: none; overflow: hidden;" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'; app.updateFieldById('projects', '${proj.id}', 'desc', this.value)">${UI.escapeHtml(proj.desc)}</textarea>
+                        </div>
+                    `;
+                    c.appendChild(el);
+                    
+                    // Auto-expand textarea
+                    const ta = el.querySelector('textarea');
+                    if (ta) { ta.style.height = ta.scrollHeight + 'px'; }
+                });
+            },
+
             renderLangsUI: function() {
                 const c = document.getElementById('langs-list-ui'); c.innerHTML = '';
                 this.state.langs.forEach((lang, i) => {
@@ -1244,6 +1298,9 @@
                     const r = this.state.fetchedRepos.find(repo => repo.id === id);
                     return r ? this.genSharedHtml(r.name, r.language, '', r.description) : '';
                 }).join('');
+                if (this.state.projects && this.state.projects.length) {
+                    projHtml += this.state.projects.map(p => this.genSharedHtml(p.name, p.link, p.date, p.desc)).join('');
+                }
                 
                 let expTimelineHtml = this.state.experience.map(e => this.genTimelineHtml(e.title, e.company, e.date, e.desc)).join('');
                 let eduTimelineHtml = this.state.education.map(e => this.genTimelineHtml(e.inst, [e.degree, e.stream].filter(Boolean).join(e.stream ? ' in ' : ''), e.year, '')).join('');
