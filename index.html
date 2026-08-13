@@ -84,26 +84,31 @@
 
         .mobile-only { display: none !important; }
         .close-preview-btn {
-            position: fixed; bottom: 20px; right: 20px; z-index: 1000;
-            background: var(--text-main); color: var(--bg-body);
-            border: none; padding: 12px 24px; border-radius: 30px;
-            font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            cursor: pointer; display: none;
+            position: fixed; top: 15px; right: 15px; z-index: 10000;
+            background: rgba(15, 23, 42, 0.7); color: white; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+            border: none; width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 0.3s;
         }
-        body.mobile-preview-active .close-preview-btn { display: block; }
+        body.mobile-preview-active .close-preview-btn { opacity: 1; pointer-events: auto; }
 
         @media (max-width: 768px) {
             body { flex-direction: column; overflow: hidden; height: 100dvh; }
             .controls-pane { width: 100%; min-width: 100%; height: 100dvh; border-right: none; }
-            .preview-pane { display: none; height: 100dvh; padding: 15px 10px; width: 100%; }
+            
+            .preview-pane { 
+                position: fixed; top: 100%; left: 0; width: 100%; height: 100dvh; 
+                z-index: 9999; padding: 15px 10px; padding-top: 70px; 
+                transition: top 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+            }
             
             .mobile-only { display: flex !important; }
+            
+            body.mobile-preview-active .preview-pane { top: 0; }
         }
         @media (min-width: 769px) {
             .desktop-hidden { display: none !important; }
-            
-            body.mobile-preview-active .controls-pane { display: none !important; }
-            body.mobile-preview-active .preview-pane { display: flex !important; }
         }
 
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -714,7 +719,7 @@
     <div id="toast" class="toast"></div>
 
     <div class="preview-pane">
-        <button class="close-preview-btn desktop-hidden" onclick="app.toggleMobilePreview()">Back to Editor</button>
+        <button class="close-preview-btn desktop-hidden" onclick="app.toggleMobilePreview()" title="Close Preview">&#10005;</button>
         <div class="resume-page" id="resume-page">
             <div class="resume-canvas template-classic font-elegant" id="resume-document">
                 <!-- Rendered via JS -->
