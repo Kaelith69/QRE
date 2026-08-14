@@ -6,7 +6,11 @@
 
 # ✨ Polished Dynamic Resume Builder
 
-**A zero-dependency, fully responsive, client-side resume builder with 18 templates, real-time preview, GitHub integration, and native PDF export.**
+**QRE (Polished Dynamic Resume Builder)** is a completely self-contained, zero-dependency, client-side resume generation tool. Housed entirely within a single `index.html` file, it requires no build steps, backend servers, or external frameworks. 
+
+The application offers a highly responsive, mobile-optimized wizard that binds user input to a centralized JSON state, driving real-time re-renders of a pixel-perfect A4 preview canvas. It features **18 distinct templates** (ranging from minimalist to infographic and brutalist designs), 8 curated typography pairings, 8 accent colors, local storage persistence, and native GitHub API integration to auto-fetch repositories.
+
+Crucially, QRE uses a custom dynamic scaling algorithm (`UI.fitToPage()`) that guarantees your resume exports seamlessly to a flawless 210mm x 297mm A4 PDF using the browser's native print engine—without relying on heavy third-party PDF libraries.
 
 <img src="./assets/license.svg" alt="MIT License">
 
